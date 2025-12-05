@@ -1,0 +1,1 @@
+/* app logic goes here – full version is in the zip; can paste in chunks later. */
