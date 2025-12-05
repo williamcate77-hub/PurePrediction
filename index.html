@@ -4,25 +4,145 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pure Prediction</title>
+
+  <!-- PWA + styles -->
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Leaflet CSS -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
   />
+
+  <!-- Leaflet JS -->
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
     defer
   ></script>
+
+  <!-- Optional config override: copy config.example.js to config.js and edit -->
   <script src="config.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
-  <!-- Content omitted here for brevity; you already have this structure from the previous zip.
-       We’ll paste it in chunks when you’re ready. -->
+  <header class="app-header">
+    <div class="branding">
+      <span class="logo-dot"></span>
+      <span class="app-title">Pure Prediction</span>
+    </div>
+
+    <div class="mode-toggle" aria-label="Fishing mode">
+      <button id="mode-land" class="mode-btn active" data-mode="land">Land</button>
+      <button id="mode-boat" class="mode-btn" data-mode="boat">Boat</button>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <!-- LEFT PANEL: controls + ranked spots -->
+    <section class="top-panel">
+      <div class="location-controls">
+        <button id="btn-locate" class="primary">Use my location</button>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Search a place (e.g. Sydney Harbour)"
+          aria-label="Search location"
+        />
+        <button id="btn-search" class="secondary">Search</button>
+      </div>
+
+      <section class="summary-cards" aria-label="Best opportunities">
+        <article id="best-opportunity-card" class="card card-main">
+          <h2>Best nearby opportunity</h2>
+          <p class="card-body" id="best-opportunity-body">
+            Tap "Use my location" or search to get started.
+          </p>
+        </article>
+
+        <section class="card card-list" aria-label="Ranked nearby spots">
+          <div class="card-header">
+            <h3>Nearby ranked spots</h3>
+            <div class="filters">
+              <button class="chip chip-active" data-filter="all">All</button>
+              <button class="chip" data-filter="high">High score</button>
+              <button class="chip" data-filter="medium">Medium</button>
+            </div>
+          </div>
+
+          <ul id="spot-list" class="spot-list"></ul>
+        </section>
+      </section>
+    </section>
+    <!-- RIGHT PANEL: map -->
+    <section class="map-panel">
+      <div id="map"></div>
+      <div id="map-loading" class="map-overlay hidden">Loading map...</div>
+      <div id="map-error" class="map-overlay hidden"></div>
+    </section>
+
+    <!-- BOTTOM SHEET: spot detail + alternatives -->
+    <section
+      id="spot-detail-sheet"
+      class="detail-sheet hidden"
+      aria-live="polite"
+    >
+      <div class="detail-header">
+        <h2 id="detail-name">Spot details</h2>
+        <button
+          id="detail-close"
+          class="icon-btn"
+          aria-label="Close details"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="detail-body">
+        <p class="detail-meta" id="detail-meta"></p>
+
+        <section class="detail-section">
+          <h3>Current conditions</h3>
+          <ul class="conditions-list" id="detail-conditions"></ul>
+        </section>
+
+        <section class="detail-section">
+          <h3>Why this is good now</h3>
+          <ul class="reasons-list" id="detail-reasons"></ul>
+        </section>
+
+        <section class="detail-section">
+          <h3>Nearby spots that might be better</h3>
+          <p class="detail-note">
+            These are based on live conditions such as wind, weather and distance.
+          </p>
+          <ul class="alternatives-list" id="detail-alternatives"></ul>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <small>
+      Map data © OpenStreetMap contributors. Weather by OpenWeather or Open-Meteo.
+    </small>
+  </footer>
+
+  <!-- Service worker registration -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker
+          .register("sw.js")
+          .catch(function (err) {
+            console.warn("Service worker registration failed:", err);
+          });
+      });
+    }
+  </script>
 </body>
 </html>
