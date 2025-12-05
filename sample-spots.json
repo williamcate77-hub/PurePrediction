@@ -1,0 +1,17 @@
+{
+  "spots": [
+    {
+      "id": "spot1",
+      "name": "Harbour Foreshore Point",
+      "lat": -33.861,
+      "lon": 151.209,
+      "mode": "land",
+      "distance_km": 2.1,
+      "access": "Shore",
+      "base_score": 0.8,
+      "mock_wind_kph": 8,
+      "mock_temp_c": 21,
+      "mock_wave_m": 0.2
+    }
+  ]
+}
